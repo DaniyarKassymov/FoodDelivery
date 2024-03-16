@@ -1,0 +1,16 @@
+@model List<FoodDelivery.ViewModels.User.OrderVm>
+
+@{
+    var resultPrice = decimal.Zero;
+}
+
+@foreach (var order in Model)
+{
+    <div>
+        <div class="orderId visually-hidden">@order.Id</div>
+        <p>@order.Food.Title - кол-во @order.Counter: @(order.Counter * order.Food.Price) тг</p>
+        <input type="button" class="deleteFromOrder" value="Удалить из заказа">
+    </div>
+    resultPrice += order.Counter * order.Food.Price;
+}
+<p class="pt-5">Итого: @resultPrice</p>

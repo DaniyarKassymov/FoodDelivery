@@ -1,0 +1,37 @@
+@model FoodDelivery.ViewModels.Account.LoginVm
+
+@{
+    ViewBag.Title = "Аутентификация";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="card card_width">
+        <div class="card-body d-flex justify-content-center">
+            <form asp-action="Login" method="post" asp-controller="Account" asp-antiforgery="true">
+                <div>
+                    <span asp-validation-for="EmailOrUserName" class="text-danger"></span>
+                    <input asp-for="EmailOrUserName" class="form-control my-2 text-muted" placeholder="Email-адрес или имя пользователя">
+                </div>
+                <div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <input asp-for="Password" class="form-control my-2 text-muted" placeholder="Пароль">
+                </div>
+                <input type="submit" class="btn btn-info w-100 mt-3 text-white" value="Войти">
+            </form>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-center text-center mt-2">
+    <div class="card p-3 card_width">
+        <div class="card-text">
+            Нет аккаунта? <a class="text-decoration-none" asp-action="Registration" asp-controller="Account">Регистрация</a>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,100 @@
+@model FoodDelivery.ViewModels.User.DetailsOrdersVm
+
+@{
+    ViewBag.Title = "Детальный просмотр заведения";
+    Layout = "_Layout";
+    var resultPrice = decimal.Zero;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <div class="card mb-3 mx-auto my-0" style="width: 570px">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="~/@Model.RestaurantDetailsVm.Image" class="img-fluid card_image" alt="restaurant_image">
+                    </div>
+                    <div class="col-md-8 text-start">
+                        <div class="card-body">
+                            <h5 class="card-title">Название: @Model.RestaurantDetailsVm.Title</h5>
+                            <p class="card-text">Описание: @Model.RestaurantDetailsVm.Description</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mb-3">
+                <h4>Список блюд</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Название</th>
+                            <th scope="col">Цена</th>
+                            <th scope="col">Описание</th>
+                            <th scope="col">Купить</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var food in Model.RestaurantDetailsVm.Food)
+                        {
+                            <tr>
+                                <td style="display: none" class="foodId">@food.Id</td>
+                                <td>@food.Title</td>
+                                <td>@food.Price</td>
+                                <td>@food.Description</td>
+                                <td>
+                                    <input type="button" class="addToOrder" value="Добавить в заказ">
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-4 border-start">
+            <h5>Содержимое корзины:</h5>
+            <div id="results">
+                @foreach (var order in Model.OrderVms)
+                {
+                    <div>
+                        <div class="orderId visually-hidden">@order.Id</div>
+                        <p>@order.Food.Title - кол-во @order.Counter: @(order.Counter * order.Food.Price) тг</p>
+                        <input type="button" class="deleteFromOrder" value="Удалить из заказа">
+                    </div>
+                    resultPrice += order.Counter * order.Food.Price;
+                }
+                <p class="pt-5">Итого: @resultPrice</p>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        let result = $('#results');
+        let restaurantId = @Model.RestaurantDetailsVm.Id;
+        
+        $(document).ready(function () {
+            $('.addToOrder').click(function (event) {
+                let foodId = $(this).closest("tr").find(".foodId").text();
+                event.preventDefault();
+                result.innerHTML = result.load('@Url.Action("AddToOrder", "User")?foodId=' + foodId + '&restaurantId=' + restaurantId);
+            });
+        });
+        
+        $(document).ready(function () {
+            $('.deleteFromOrder').click(function (event) {
+                let orderId = $(this).closest("div").find(".orderId").text();
+                event.preventDefault();
+                result.innerHTML = result.load('@Url.Action("DeleteFromOrder", "User")?orderId=' + orderId + '&restaurantId=' + restaurantId);
+            });
+        });
+        
+        $(document).bind('DOMSubtreeModified', function () {
+            $('.deleteFromOrder').click(function (event) {
+                let orderId = $(this).closest("div").find(".orderId").text();
+                event.preventDefault();
+                result.innerHTML = result.load('@Url.Action("DeleteFromOrder", "User")?orderId=' + orderId + '&restaurantId=' + restaurantId);
+            });
+        });
+    </script>
+}

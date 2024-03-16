@@ -1,0 +1,39 @@
+@model FoodDelivery.ViewModels.Account.RegistrationVm
+
+@{
+    ViewBag.Title = "Добавление клиента";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-center">
+    <div class="card card_width">
+        <div class="card-body d-flex justify-content-center">
+            <form asp-action="AddUser" method="post" asp-antiforgery="true">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                    <input id="username" asp-for="UserName" class="form-control my-2 text-muted" placeholder="Имя пользователя">
+                </div>
+                <div>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <input id="email" asp-for="Email" class="form-control my-2 text-muted" placeholder="Эл. адрес">
+                </div>
+                <div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <input id="password" asp-for="Password" class="form-control my-2 text-muted" placeholder="Пароль">
+                </div>
+                <div>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    <input id="confirmPassword" asp-for="ConfirmPassword" class="form-control my-2 text-muted" placeholder="Подтвердите пароль">
+                </div>
+                <input type="submit" class="btn btn-info w-100 mt-3 text-white" value="Создать пользователя">
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
